@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.m-l-1{
+  margin-left: 12px;
+}
+.m-b-1{
+  margin-bottom: 12px;
+}
+.categories-list, .tasks-list{
+  max-height: 300px;
+}
