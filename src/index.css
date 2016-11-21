@@ -6,9 +6,15 @@ body {
 .m-l-1{
   margin-left: 12px;
 }
+.m-r-1{
+  margin-right: 12px;
+}
+.m-t-1{
+  margin-top: 12px;
+}
 .m-b-1{
   margin-bottom: 12px;
 }
 .categories-list, .tasks-list{
-  max-height: 300px;
+  /*max-height: 300px;*/
 }

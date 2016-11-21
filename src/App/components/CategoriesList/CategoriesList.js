@@ -1,11 +1,11 @@
 // CategoriesList
 import React, { Component } from 'react';
-import CategoryItem from '../CategoryItem/CategoryItem';
+import CategoryItem from './components/CategoryItem/CategoryItem';
 
 class CategoriesList extends Component {
   render() {
     return (
-      <ul className="list-group pre-scrollable categories-list">      
+      <ul className="list-group pre-scrollable categories-list">
         {this.props.list.map((elem) => <CategoryItem key={elem.id} category={elem}/>)}
       </ul>
     );

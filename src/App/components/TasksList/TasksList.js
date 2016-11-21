@@ -1,6 +1,6 @@
 // TasksList
 import React, { Component } from 'react';
-import TaskItem from '../TaskItem/TaskItem';
+import TaskItem from './components/TaskItem/TaskItem';
 class TasksList extends Component {
   render() {
     return (

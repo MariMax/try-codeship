@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App/App';
+import App from './App/App';
 import 'bootstrap/dist/css/bootstrap-flex.css';
 //import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
@@ -20,7 +20,14 @@ var categoriesList = [
   },
   {
     id: 'cat4',
-    title: "Category 4"
+    title: "Category 4",
+    subcategories:[{
+      id:'cat4-1',
+      title: 'Category 4-1'
+    }, {
+      id:'cat4-2',
+      title: 'Category 4-2'
+    }]
   },
   {
     id: 'cat5',
