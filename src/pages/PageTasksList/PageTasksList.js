@@ -1,9 +1,9 @@
 // PageTasksList
 import React, { Component } from 'react';
 
-import Header from 'App/components/Header/Header';
-import ProgressBar from 'App/components/ProgressBar/ProgressBar';
-import TasksAndCategories from 'App/components/TasksAndCategories/TasksAndCategories'
+import Header from 'components/Header/Header';
+import ProgressBar from 'components/ProgressBar/ProgressBar';
+import TasksAndCategories from 'components/TasksAndCategories/TasksAndCategories'
 
 class PageTasksList extends Component {
   render() {

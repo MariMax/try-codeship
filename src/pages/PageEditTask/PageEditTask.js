@@ -1,8 +1,8 @@
 // PageEditTask
 import React, { Component } from 'react';
 
-import Header from 'App/components/Header/Header';
-import CategoriesList from 'App/components/CategoriesList/CategoriesList';
+import Header from 'components/Header/Header';
+import CategoriesList from 'components/CategoriesList/CategoriesList';
 
 class PageEditTask extends Component {
   render() {

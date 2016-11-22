@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App/App';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+
+import AppContainer from 'containers/AppContainer/AppContainer';
+
+import PageTasksList from 'pages/PageTasksList/PageTasksList';
+import PageEditTask from 'pages/PageEditTask/PageEditTask';
+
 import 'bootstrap/dist/css/bootstrap-flex.css';
-//import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
 
 var categoriesList = [
@@ -66,7 +71,30 @@ var tasksList = [
   }
 ];
 
+class PageTasksListWrapper extends Component {
+  render(){
+    return <PageTasksList categories={categoriesList} tasks={tasksList}/>
+  }
+}
+class PageEditTaskWrapper extends Component {
+  render(){
+    return <PageEditTask categories={categoriesList}/>
+  }
+}
+
 ReactDOM.render(
-  <App categories={categoriesList} tasks={tasksList}/>,
+  <Router history={browserHistory}>
+    <Route path='/' component={AppContainer}>
+        <IndexRoute component={PageTasksListWrapper} />
+        <Route path='edit' component={PageEditTaskWrapper} />
+    </Route>
+  </Router>,
   document.getElementById('root')
 );
+
+// <App categories={categoriesList} tasks={tasksList}/>
+/*
+<IndexRoute component={Home} />
+<Route path='admin' component={Admin} />
+<Route path='genre' component={Genre} />
+*/
