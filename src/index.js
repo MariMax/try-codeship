@@ -84,7 +84,7 @@ class PageEditTaskWrapper extends Component {
 
 ReactDOM.render(
   <Router history={browserHistory}>
-    <Route path='/' component={AppContainer}>
+    <Route path='/react-mentoring-task/' component={AppContainer}>
         <IndexRoute component={PageTasksListWrapper} />
         <Route path='edit' component={PageEditTaskWrapper} />
     </Route>
