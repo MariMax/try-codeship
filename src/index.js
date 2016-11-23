@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import AppContainer from 'containers/AppContainer/AppContainer';
 
@@ -83,8 +83,8 @@ class PageEditTaskWrapper extends Component {
 }
 
 ReactDOM.render(
-  <Router history={browserHistory}>
-    <Route path='/react-mentoring-task/' component={AppContainer}>
+  <Router history={hashHistory}>
+    <Route path='/' component={AppContainer}>
         <IndexRoute component={PageTasksListWrapper} />
         <Route path='edit' component={PageEditTaskWrapper} />
     </Route>
