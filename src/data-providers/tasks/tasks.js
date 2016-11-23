@@ -16,7 +16,14 @@ var categoriesList = [
     title: "Category 4",
     subcategories:[{
       id:'cat4-1',
-      title: 'Category 4-1'
+      title: 'Category 4-1',
+      subcategories:[{
+        id:'cat4-1-1',
+        title: 'Category 4-1-1'
+      }, {
+        id:'cat4-1-2',
+        title: 'Category 4-1-2'
+      }]
     }, {
       id:'cat4-2',
       title: 'Category 4-2'
