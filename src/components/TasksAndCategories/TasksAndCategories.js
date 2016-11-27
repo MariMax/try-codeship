@@ -4,8 +4,36 @@ import AddTask from '../AddTask/AddTask';
 
 import CategoriesList from '../CategoriesList/CategoriesList';
 import TasksList from '../TasksList/TasksList';
+import { loadTasksList, loadCategoriesList } from 'data-providers/tasks/tasks';
 
 class TasksAndCategories extends Component {
+  constructor(){
+    super();
+    this.state = {
+      tasksList:[],
+      categoiresList:[]
+    };
+    this.loadCategories();
+    this.loadTasks();
+  }
+
+  loadTasks(){
+    loadTasksList().then(tasksList => {
+      this.setState({
+          tasksList:tasksList
+        });
+    });
+  }
+
+  loadCategories(){
+    loadCategoriesList().then(categoiresList => {
+      this.setState({
+          categoiresList:categoiresList
+        });
+    });
+  }
+
+
   render() {
     return (
         <div className="container">
@@ -19,10 +47,10 @@ class TasksAndCategories extends Component {
           </div>
           <div className="row">
             <div className="col-xs-4">
-              <CategoriesList list={this.props.categories}/>
+              <CategoriesList list={this.state.categoiresList}/>
             </div>
             <div className="col-xs-8">
-              <TasksList list={this.props.tasks}/>
+              <TasksList list={this.state.tasksList}/>
             </div>
           </div>
         </div>
