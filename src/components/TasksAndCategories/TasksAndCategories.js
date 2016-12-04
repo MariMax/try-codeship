@@ -2,37 +2,11 @@ import React, { Component } from 'react';
 import AddCategory from '../AddCategory/AddCategory';
 import AddTask from '../AddTask/AddTask';
 
-import CategoriesList from '../CategoriesList/CategoriesList';
+import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
 import TasksList from '../TasksList/TasksList';
-import { loadTasksList, loadCategoriesList } from 'data-providers/tasks/tasks';
+import { connect } from 'react-redux';
 
 class TasksAndCategories extends Component {
-  constructor(){
-    super();
-    this.state = {
-      tasksList:[],
-      categoiresList:[]
-    };
-    this.loadCategories();
-    this.loadTasks();
-  }
-
-  loadTasks(){
-    loadTasksList().then(tasksList => {
-      this.setState({
-          tasksList:tasksList
-        });
-    });
-  }
-
-  loadCategories(){
-    loadCategoriesList().then(categoiresList => {
-      this.setState({
-          categoiresList:categoiresList
-        });
-    });
-  }
-
 
   render() {
     return (
@@ -47,10 +21,10 @@ class TasksAndCategories extends Component {
           </div>
           <div className="row">
             <div className="col-xs-4">
-              <CategoriesList list={this.state.categoiresList}/>
+              <AllCategoriesList/>
             </div>
             <div className="col-xs-8">
-              <TasksList list={this.state.tasksList}/>
+              <TasksList list={this.props.tasks}/>
             </div>
           </div>
         </div>
@@ -58,4 +32,8 @@ class TasksAndCategories extends Component {
   }
 }
 
-export default TasksAndCategories;
+const mapStateToProps = (state) => ({
+  tasks : state.tasks
+});
+
+export default connect(mapStateToProps)(TasksAndCategories);

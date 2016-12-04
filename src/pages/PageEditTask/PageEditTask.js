@@ -2,26 +2,9 @@
 import React, { Component } from 'react';
 
 import Header from 'components/Header/Header';
-import CategoriesList from 'components/CategoriesList/CategoriesList';
-import { loadCategoriesList } from 'data-providers/tasks/tasks';
+import AllCategoriesList from 'components/AllCategoriesList/AllCategoriesList';
 
 class PageEditTask extends Component {
-
-  constructor(){
-    super();
-    this.state = {
-      categoiresList:[]
-    };
-    this.loadCategories();
-  }
-
-  loadCategories(){
-    loadCategoriesList().then(categoiresList => {
-      this.setState({
-          categoiresList:categoiresList
-        });
-    });
-  }
 
   render() {
     return (
@@ -30,7 +13,7 @@ class PageEditTask extends Component {
           <div className="container">
             <div className="row m-t-1">
               <div className="col-xs-4">
-                <CategoriesList list={this.state.categoiresList}/>
+                <AllCategoriesList/>
               </div>
               <div className="col-xs-8">
                <form>
