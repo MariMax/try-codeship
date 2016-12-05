@@ -1,24 +1,17 @@
-import { ACTION_SET_CATEGORIES_LIST } from 'actions/setCategoriesListAction';
-import { ACTION_SET_TASKS_LIST } from 'actions/setTasksListAction';
+import { ACTION_SET_TASKS_AND_CATEGORIES } from 'actions/setTasksAndCategoriesAction';
+
 
 export default function(state, action) {
-  if(ACTION_SET_CATEGORIES_LIST === action.type) {
+  if(ACTION_SET_TASKS_AND_CATEGORIES === action.type) {
     // @TODO: fix this:
     /* eslint-disable */
-    let { categories, ...restState } = state;
+    let { tasks, categories, ...restState } = state;
     /* eslint-enable */
 
-    return Object.assign({}, restState, { categories: action.categories });
+    return Object.assign({}, restState, {
+      categories: action.categories,
+      tasks: action.tasks
+    });
   }
-
-  if(ACTION_SET_TASKS_LIST === action.type) {
-    // @TODO: fix this:
-    /* eslint-disable */
-    let { tasks, ...restState } = state;
-    /* eslint-enable */
-
-    return Object.assign({}, restState, { tasks: action.tasks });
-  }
-
   return state;
 }

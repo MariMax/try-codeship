@@ -15,8 +15,8 @@ import { createStore } from 'redux';
 import reducers from 'reducers';
 
 import { loadCategoriesList, loadTasksList } from 'data-providers/tasks/tasks';
-import { setCategoriesListAction } from 'actions/setCategoriesListAction';
-import { setTasksListAction } from 'actions/setTasksListAction';
+import { setTasksAndCategoriesAction } from 'actions/setTasksAndCategoriesAction';
+
 
 var initialState = {
   categories: [],
@@ -24,18 +24,6 @@ var initialState = {
 };
 
 var store = createStore(reducers, initialState);
-
-function loadCategories(){
-  loadCategoriesList().then(categoiresList => {
-    store.dispatch(setCategoriesListAction(categoiresList));
-  });
-}
-
-function loadTasks(){
-  loadTasksList().then(tasksList => {
-    store.dispatch(setTasksListAction(tasksList));
-  });
-}
 
 ReactDOM.render(
   <Provider store={store}>
@@ -49,6 +37,10 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-
-loadCategories();
-loadTasks();
+// initail loading state
+Promise.all([
+  loadTasksList(),
+  loadCategoriesList()
+]).then(function(result){
+  store.dispatch(setTasksAndCategoriesAction(...result));
+});
