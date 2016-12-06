@@ -18,12 +18,9 @@ import { loadCategoriesList, loadTasksList } from 'data-providers/tasks/tasks';
 import { setTasksAndCategoriesAction } from 'actions/setTasksAndCategoriesAction';
 
 
-var initialState = {
-  categories: [],
-  tasks: []
-};
 
-var store = createStore(reducers, initialState);
+
+var store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>
