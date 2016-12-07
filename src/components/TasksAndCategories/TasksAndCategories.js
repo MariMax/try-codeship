@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
-import AddCategory from '../AddCategory/AddCategory';
+import InputForm from '../InputForm/InputForm';
 import AddTask from '../AddTask/AddTask';
 
 import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
 import TasksList from '../TasksList/TasksList';
 import { connect } from 'react-redux';
 
+import { addCategoryAction } from 'actions/addCategoryAction';
+
 class TasksAndCategories extends Component {
+  constructor() {
+    super();
+    this.onAddCategory = this.onAddCategory.bind(this);
+  }
+
+  onAddCategory(title){
+    this.props.addCategoryAction(title);
+  }
 
   render() {
     return (
         <div className="container">
           <div className="clearfix m-b-1">
             <div className="float-xs-left">
-              <AddCategory/>
+              <InputForm onSubmit={this.onAddCategory} placeholder="Enter category title"/>
             </div>
             <div className="float-xs-right">
               <AddTask/>
@@ -36,4 +46,4 @@ const mapStateToProps = (state) => ({
   tasks : state.tasks
 });
 
-export default connect(mapStateToProps)(TasksAndCategories);
+export default connect(mapStateToProps, { addCategoryAction })(TasksAndCategories);
