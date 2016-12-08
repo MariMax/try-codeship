@@ -22,8 +22,12 @@ class CategoryItem extends Component {
 
     return (
         <li className="list-group-item">
-          {(hasSub)?(<button onClick={this.toggleSubBntClick} className="btn btn-sm btn-info m-r-1">+</button>):null}
-          {cat.title}
+          {(hasSub)?(
+            <button onClick={this.toggleSubBntClick} className="btn btn-sm btn-info m-r-1">
+              {this.state.subListOpened?'-':'+'}
+            </button>)
+          :null}
+          {cat.title} <button className="pull-xs-right">add sub</button>
           {(hasSub&&this.state.subListOpened)?(
             <ul className="list-group m-t-1">
               {cat.subcategories.map((elem) => <CategoryItem key={elem.id} category={elem}/>)}

@@ -46,6 +46,7 @@ module.exports = {
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Finally, this is your app's code:
+    'bootstrap-loader',
     paths.appIndexJs
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
@@ -100,7 +101,6 @@ module.exports = {
         include: paths.appSrc,
         loader: 'babel',
         query: {
-
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/react-scripts/
           // directory for faster rebuilds. We use findCacheDir() because of:
@@ -109,6 +109,10 @@ module.exports = {
             name: 'react-scripts'
           })
         }
+      },
+      {
+        test: /\.js$/,
+        loader: 'imports?jQuery=jquery,$=jquery'
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -148,7 +152,8 @@ module.exports = {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]'
         }
-      }
+      },
+      { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' }
     ]
   },
 
@@ -190,7 +195,24 @@ module.exports = {
     // to restart the development server for Webpack to discover it. This plugin
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+      Tooltip: "exports?Tooltip!bootstrap/js/dist/tooltip",
+      Alert: "exports?Alert!bootstrap/js/dist/alert",
+      Button: "exports?Button!bootstrap/js/dist/button",
+      Carousel: "exports?Carousel!bootstrap/js/dist/carousel",
+      Collapse: "exports?Collapse!bootstrap/js/dist/collapse",
+      Dropdown: "exports?Dropdown!bootstrap/js/dist/dropdown",
+      Modal: "exports?Modal!bootstrap/js/dist/modal",
+      Popover: "exports?Popover!bootstrap/js/dist/popover",
+      Scrollspy: "exports?Scrollspy!bootstrap/js/dist/scrollspy",
+      Tab: "exports?Tab!bootstrap/js/dist/tab",
+      Tooltip: "exports?Tooltip!bootstrap/js/dist/tooltip",
+      Util: "exports?Util!bootstrap/js/dist/util"
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

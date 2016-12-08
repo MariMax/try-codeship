@@ -6,7 +6,7 @@ function TaskItem(props){
     return (
         <li className="list-group-item clearfix">
           {props.task.title}
-          <Link className="btn btn-secondary float-xs-right" to='/edit'>edit</Link>          
+          <Link className="btn btn-secondary pull-xs-right" to='/edit'>edit</Link>          
         </li>
     );
 }
