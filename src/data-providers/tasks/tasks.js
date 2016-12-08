@@ -66,11 +66,11 @@ var tasksList = [
   },
   {
     id: 6,
-    title: "Task 5"
+    title: "Task 6"
   },
   {
     id: 7,
-    title: "Task 5"
+    title: "Task 7"
   }
 ];
 

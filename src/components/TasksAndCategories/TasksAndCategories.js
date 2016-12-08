@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 import InputForm from '../InputForm/InputForm';
-import AddTask from '../AddTask/AddTask';
 
 import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
 import TasksList from '../TasksList/TasksList';
 import { connect } from 'react-redux';
 
 import { addCategoryAction } from 'actions/addCategoryAction';
+import { addTaskAction } from 'actions/addTaskAction';
 
 class TasksAndCategories extends Component {
   constructor() {
     super();
     this.onAddCategory = this.onAddCategory.bind(this);
+    this.onAddTask = this.onAddTask.bind(this);
   }
 
-  onAddCategory(title){
+  onAddCategory(title) {
     this.props.addCategoryAction(title);
+  }
+
+  onAddTask(title) {
+    this.props.addTaskAction(title);
   }
 
   render() {
@@ -26,7 +31,7 @@ class TasksAndCategories extends Component {
               <InputForm onSubmit={this.onAddCategory} placeholder="Enter category title"/>
             </div>
             <div className="float-xs-right">
-              <AddTask/>
+              <InputForm onSubmit={this.onAddTask} placeholder="Enter new task title"/>
             </div>
           </div>
           <div className="row">
@@ -46,4 +51,4 @@ const mapStateToProps = (state) => ({
   tasks : state.tasks
 });
 
-export default connect(mapStateToProps, { addCategoryAction })(TasksAndCategories);
+export default connect(mapStateToProps, { addCategoryAction,  addTaskAction})(TasksAndCategories);
