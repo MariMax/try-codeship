@@ -17,7 +17,7 @@ class PageEditTask extends Component {
               </div>
               <div className="col-xs-8">
                <form>
-                  <div className="float-xs-right m-b-1">
+                  <div className="pull-xs-right m-b-1">
                     <button type="button" className="btn btn-secondary">Cancel</button>
                     <button type="button" className="btn btn-success m-l-1">Save changes</button>
                   </div>
