@@ -63,8 +63,7 @@
     "webpack-manifest-plugin": "1.1.0",
     "whatwg-fetch": "1.0.0"
   },
-  "dependencies": {
-    "imports-loader": "^0.7.0"
+  "dependencies": {    
   },
   "scripts": {
     "start": "node scripts/start.js",
