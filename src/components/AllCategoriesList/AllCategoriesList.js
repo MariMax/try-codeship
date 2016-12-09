@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import CategoriesList from '../CategoriesList/CategoriesList';
 import { connect } from 'react-redux';
 
 class AllCategoriesList extends Component {
   render(){
-    return (<CategoriesList list={this.props.categories}/>)
+    return (
+      <CategoriesList
+        onEdit={this.props.onEdit}
+        onAddSubCategory={this.props.onAddSubCategory}
+        list={this.props.categories}/>)
   }
 }
 
@@ -36,5 +40,9 @@ function mapStateToProps(state) {
   };
 }
 
+AllCategoriesList.propTypes = {
+  onAddSubCategory: PropTypes.func,
+  onEdit: PropTypes.func
+}
 
 export default connect(mapStateToProps)(AllCategoriesList);

@@ -1,27 +1,62 @@
 import React, { Component } from 'react';
 import InputForm from '../InputForm/InputForm';
-
+import InputModal from '../InputModal/InputModal';
 import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
 import TasksList from '../TasksList/TasksList';
 import { connect } from 'react-redux';
 
 import { addCategoryAction } from 'actions/addCategoryAction';
+import { updateCategoryAction } from 'actions/updateCategoryAction';
 import { addTaskAction } from 'actions/addTaskAction';
-// import $ from 'jquery'
 
 class TasksAndCategories extends Component {
   constructor() {
     super();
+    this.state = {};
     this.onAddCategory = this.onAddCategory.bind(this);
     this.onAddTask = this.onAddTask.bind(this);
+    this.onAddSubCategoryClick = this.onAddSubCategoryClick.bind(this);
+    this.onHideModal = this.onHideModal.bind(this);
+    this.onSubmitAddSubCategory = this.onSubmitAddSubCategory.bind(this);
+    this.onEditCategoryClick = this.onEditCategoryClick.bind(this);
+    this.onSubmitEditCategory = this.onSubmitEditCategory.bind(this);
   }
 
   onAddCategory(title) {
     this.props.addCategoryAction(title);
   }
 
+  onSubmitAddSubCategory(title){
+    this.props.addCategoryAction(title, this.state.addSubCategoryFor);
+  }
+
+  onAddSubCategoryClick(parentCategory) {
+    this.setState({
+      addSubCategoryFor: parentCategory,
+      editedCategory:null
+    });
+  }
+
+  onEditCategoryClick(category) {
+    this.setState({
+      addSubCategoryFor:null,
+      editedCategory: category
+    });
+  }
+
+  onSubmitEditCategory(title){
+    this.props.updateCategoryAction(title, this.state.editedCategory);
+  }
+
   onAddTask(title) {
     this.props.addTaskAction(title);
+  }
+
+  onHideModal() {
+    this.setState({
+      addSubCategoryFor:null,
+      editedCategory:null
+    });
   }
 
   render() {
@@ -37,13 +72,18 @@ class TasksAndCategories extends Component {
           </div>
           <div className="row">
             <div className="col-xs-4">
-              <AllCategoriesList/>
+              <AllCategoriesList onEdit={this.onEditCategoryClick} onAddSubCategory={this.onAddSubCategoryClick}/>
             </div>
             <div className="col-xs-8">
               <TasksList list={this.props.tasks}/>
             </div>
           </div>
-          <CategoryModal/>
+          {this.state.addSubCategoryFor?(
+            <InputModal onSubmit={this.onSubmitAddSubCategory} modalTitle={`Add sub category for "${this.state.addSubCategoryFor.title}"`} placeholder="Enter category name" onHide={this.onHideModal}/>
+          ):null}
+          {this.state.editedCategory?(
+            <InputModal value={this.state.editedCategory.title} onSubmit={this.onSubmitEditCategory} modalTitle={`Edit category "${this.state.editedCategory.title}"`} placeholder="Enter new category name" onHide={this.onHideModal}/>
+          ):null}
         </div>
     );
   }
@@ -53,59 +93,5 @@ const mapStateToProps = (state) => ({
   tasks : state.tasks
 });
 
-export default connect(mapStateToProps, { addCategoryAction,  addTaskAction})(TasksAndCategories);
-
-class CategoryModal extends Component {
-  componentDidMount() {
-      $(this.refs.modal).modal('show');
-      $(this.refs.modal).on('hidden.bs.modal', this.props.handleHideModal);
-  }
-
-  constructor() {
-    super();
-    this.state = {
-      inputValue:''
-    }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({inputValue: event.target.value});
-  }
-
-  handleSubmit(e){
-      if(this.state.inputValue) {
-        // this.props.onSubmit(this.state.inputValue);
-        $(this.refs.modal).modal('hide');
-      }
-      this.setState({inputValue:''});
-      e.preventDefault();
-  }
-
-  render() {
-    return (
-    <div ref="modal" className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 className="modal-title" id="myModalLabel">Modal title</h4>
-          </div>
-          <form onSubmit={this.handleSubmit}>
-            <div className="modal-body">
-                <input required type="text" value={this.state.inputValue} onChange={this.handleChange} className="form-control" placeholder={this.props.placeholder}/>
-
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" className="btn btn-primary m-l-1">Save changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>);
-  }
-}
+export default connect(mapStateToProps,
+  { addCategoryAction,  addTaskAction, updateCategoryAction })(TasksAndCategories);

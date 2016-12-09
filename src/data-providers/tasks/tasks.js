@@ -14,14 +14,14 @@ var categoriesList = [
   },
   {
     id: 'cat4',
-    title: "Category 4",
-    subcategories:['cat4-1', 'cat4-2']
+    title: "Category 4"
+    // subcategories:['cat4-1', 'cat4-2']
   },
   {
     id:'cat4-1',
     title: 'Category 4-1',
-    parent: 'cat4',
-    subcategories:['cat4-1-1', 'cat4-1-2']
+    parent: 'cat4'
+    // subcategories:['cat4-1-1', 'cat4-1-2']
   },
   {
     id:'cat4-1-1',

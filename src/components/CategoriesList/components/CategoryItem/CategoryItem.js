@@ -1,5 +1,5 @@
 // CategoryItem
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 class CategoryItem extends Component {
   constructor(props) {
@@ -27,10 +27,19 @@ class CategoryItem extends Component {
               {this.state.subListOpened?'-':'+'}
             </button>)
           :null}
-          {cat.title} <button className="pull-xs-right">add sub</button>
+          {cat.title}
+          {this.props.onAddSubCategory
+            ?(<button onClick={()=>this.props.onAddSubCategory(cat)} className="pull-xs-right">add</button>):null}
+          {this.props.onEdit
+            ?(<button onClick={()=>this.props.onEdit(cat)} className="pull-xs-right">edit</button>):null}
           {(hasSub&&this.state.subListOpened)?(
             <ul className="list-group m-t-1">
-              {cat.subcategories.map((elem) => <CategoryItem key={elem.id} category={elem}/>)}
+              {cat.subcategories.map((elem) =>
+                <CategoryItem
+                  key={elem.id}
+                  category={elem}
+                  onEdit={this.props.onEdit} 
+                  onAddSubCategory={this.props.onAddSubCategory}/>)}
             </ul>):null}
         </li>
     );
@@ -38,7 +47,9 @@ class CategoryItem extends Component {
 }
 
 CategoryItem.propTypes = {
-  category : React.PropTypes.object.isRequired
+  category : PropTypes.object.isRequired,
+  onAddSubCategory: PropTypes.func,
+  onEdit: PropTypes.func
 }
 
 export default CategoryItem;

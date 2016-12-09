@@ -55,6 +55,7 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [
     require.resolve('./polyfills'),
+    'bootstrap-loader',
     paths.appIndexJs
   ],
   output: {
@@ -105,6 +106,10 @@ module.exports = {
         include: paths.appSrc,
         loader: 'babel',
 
+      },
+      {
+        test: /\.js$/,
+        loader: 'imports?jQuery=jquery,$=jquery'
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -159,7 +164,8 @@ module.exports = {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]'
         }
-      }
+      },
+      { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' }
     ]
   },
 
@@ -231,6 +237,23 @@ module.exports = {
     // having to parse `index.html`.
     new ManifestPlugin({
       fileName: 'asset-manifest.json'
+    }),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+      Tooltip: "exports?Tooltip!bootstrap/js/dist/tooltip",
+      Alert: "exports?Alert!bootstrap/js/dist/alert",
+      Button: "exports?Button!bootstrap/js/dist/button",
+      Carousel: "exports?Carousel!bootstrap/js/dist/carousel",
+      Collapse: "exports?Collapse!bootstrap/js/dist/collapse",
+      Dropdown: "exports?Dropdown!bootstrap/js/dist/dropdown",
+      Modal: "exports?Modal!bootstrap/js/dist/modal",
+      Popover: "exports?Popover!bootstrap/js/dist/popover",
+      Scrollspy: "exports?Scrollspy!bootstrap/js/dist/scrollspy",
+      Tab: "exports?Tab!bootstrap/js/dist/tab",
+      Tooltip: "exports?Tooltip!bootstrap/js/dist/tooltip",
+      Util: "exports?Util!bootstrap/js/dist/util"
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.
