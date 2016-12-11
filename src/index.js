@@ -30,7 +30,7 @@ ReactDOM.render(
     <Router history={hashHistory}>
       <Route path='/' component={AppContainer}>
           <IndexRoute component={PageTasksList} />
-          <Route path='edit' component={PageEditTask} />
+          <Route path='task/:taskId' component={PageEditTask} />
       </Route>
     </Router>
 </Provider>,

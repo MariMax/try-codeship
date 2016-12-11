@@ -1,28 +1,68 @@
 // PageEditTask
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
 import Header from 'components/Header/Header';
 import AllCategoriesList from 'components/AllCategoriesList/AllCategoriesList';
+import { updateTaskAction } from 'actions/updateTaskAction';
 
 class PageEditTask extends Component {
+  constructor() {
+    super();
+    this.state = {
+      category:null
+    };
+  }
+
+  componentWillReceiveProps(newProps) {
+    if(newProps.task){
+      $(this.refs.tasktitle).val(newProps.task.title);
+      $(this.refs.description).val(newProps.task.description);
+      if(newProps.category){
+        this.setState({
+          category:newProps.category
+        });
+      }
+    }
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    this.saveTask();
+    this.props.router.goBack();
+  }
+
+  saveTask() {
+    this.props.updateTaskAction(
+    this.props.task,
+    $(this.refs.tasktitle).val(),
+    $(this.refs.description).val(),
+    this.state.category);
+  }
+
+  onSelectCategory(cat) {    
+    this.setState({
+      category:cat
+    });
+  }
 
   render() {
+    // console.log(this.props);
     return (
         <div>
           <Header title="To-Do Item #1" showTaskFilter={false}/>
           <div className="container">
             <div className="row m-t-1">
               <div className="col-xs-4">
-                <AllCategoriesList/>
+                <AllCategoriesList selectedCategory={this.state.category} onSelect={this.onSelectCategory.bind(this)}/>
               </div>
               <div className="col-xs-8">
-               <form>
+               <form onSubmit={this.handleSubmit.bind(this)}>
                   <div className="pull-xs-right m-b-1">
-                    <button type="button" className="btn btn-secondary">Cancel</button>
-                    <button type="button" className="btn btn-success m-l-1">Save changes</button>
+                    <button type="button" onClick={this.props.router.goBack} className="btn btn-secondary">Cancel</button>
+                    <button type="submit" className="btn btn-success m-l-1">Save changes</button>
                   </div>
                   <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Task title"/>
+                    <input ref="tasktitle" type="text" className="form-control" placeholder="Task title"/>
                   </div>
                   <div className="form-check">
                     <label className="form-check-label">
@@ -30,7 +70,7 @@ class PageEditTask extends Component {
                     </label>
                   </div>
                   <div className="form-group">
-                    <textarea className="form-control" rows="10"></textarea>
+                    <textarea ref="description" className="form-control" rows="10"></textarea>
                   </div>
                 </form>
               </div>
@@ -40,5 +80,22 @@ class PageEditTask extends Component {
     );
   }
 }
+function mapStateToProps(state, props){
+  let taskId = parseInt(props.routeParams.taskId, 10);
+  let task = state.tasks.find(function(task){
+    return taskId === task.id;
+  });
+  let category;
 
-export default PageEditTask;
+  if(task){
+    category = state.categories.find(function(cat){
+      return task.categoryId === cat.id;
+    });
+  }
+
+  return {
+    task: task,
+    category:category
+  };
+}
+export default connect(mapStateToProps, {updateTaskAction:updateTaskAction})(PageEditTask);

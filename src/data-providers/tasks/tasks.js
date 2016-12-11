@@ -54,7 +54,8 @@ var tasksList = [
   },
   {
     id: 3,
-    title: "Task 3"
+    title: "Task 3",
+    categoryId: 'cat3'
   },
   {
     id: 4,

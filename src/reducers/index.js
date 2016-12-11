@@ -2,6 +2,7 @@ import { ACTION_SET_TASKS_AND_CATEGORIES } from 'actions/setTasksAndCategoriesAc
 import { ACTION_ADD_CATEGORY } from 'actions/addCategoryAction';
 import { ACTION_UPDATE_CATEGORY } from 'actions/updateCategoryAction';
 import { ACTION_ADD_TASK } from 'actions/addTaskAction';
+import { ACTION_UPDATE_TASK } from 'actions/updateTaskAction';
 
 import { combineReducers } from 'redux';
 
@@ -14,6 +15,19 @@ function tasksReducer(state = [], action) {
       id: state.length + 1,
       title: action.title
     }, ...state];
+  }
+  if(ACTION_UPDATE_TASK === action.type) {
+    // console.log('actio', action)
+    return state.map(function(task){
+      if(task.id === action.task.id){
+        return Object.assign({}, task, {
+          title: action.title,
+          description: action.description,
+          categoryId: action.category ? action.category.id : null
+        });
+      }
+      return Object.assign({}, task);
+    });
   }
   return state;
 }
@@ -38,7 +52,7 @@ function categoriesReducer(state = [], action){
         return Object.assign({}, action.category, { title: action.title });
       }
       return Object.assign({}, category);
-    })
+    });
   }
 
   return state;

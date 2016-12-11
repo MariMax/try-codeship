@@ -1,5 +1,6 @@
 // CategoryItem
 import React, { Component, PropTypes } from 'react';
+import CategoriesList from '../../CategoriesList';
 
 class CategoryItem extends Component {
   constructor(props) {
@@ -19,9 +20,10 @@ class CategoryItem extends Component {
   render() {
     var cat = this.props.category;
     var hasSub = Array.isArray(cat.subcategories) && cat.subcategories.length;
+    var isSelected = this.props.isSelected;
 
     return (
-        <li className="list-group-item">
+        <li className={'list-group-item '+(isSelected?'bg-primary text-white':'text-default')}>
           {(hasSub)?(
             <button onClick={this.toggleSubBntClick} className="btn btn-sm btn-info m-r-1">
               {this.state.subListOpened?'-':'+'}
@@ -32,15 +34,15 @@ class CategoryItem extends Component {
             ?(<button onClick={()=>this.props.onAddSubCategory(cat)} className="pull-xs-right">add</button>):null}
           {this.props.onEdit
             ?(<button onClick={()=>this.props.onEdit(cat)} className="pull-xs-right">edit</button>):null}
+          {this.props.onSelect
+              ?(<button onClick={()=>this.props.onSelect(cat)} className="pull-xs-right">set</button>):null}
           {(hasSub&&this.state.subListOpened)?(
-            <ul className="list-group m-t-1">
-              {cat.subcategories.map((elem) =>
-                <CategoryItem
-                  key={elem.id}
-                  category={elem}
-                  onEdit={this.props.onEdit} 
-                  onAddSubCategory={this.props.onAddSubCategory}/>)}
-            </ul>):null}
+            <CategoriesList
+              className="list-group m-t-1"
+              onEdit={this.props.onEdit}
+              onSelect={this.props.onSelect}
+              onAddSubCategory={this.props.onAddSubCategory}
+              list={cat.subcategories}/>):null}
         </li>
     );
   }
@@ -48,8 +50,10 @@ class CategoryItem extends Component {
 
 CategoryItem.propTypes = {
   category : PropTypes.object.isRequired,
+  isSelected: PropTypes.bool,
   onAddSubCategory: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  onSelect: PropTypes.func
 }
 
 export default CategoryItem;
