@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import InputForm from '../InputForm/InputForm';
 import InputModal from '../InputModal/InputModal';
 import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
@@ -12,6 +12,7 @@ import { addTaskAction } from 'actions/addTaskAction';
 class TasksAndCategories extends Component {
   constructor() {
     super();
+
     this.state = {};
     this.onAddCategory = this.onAddCategory.bind(this);
     this.onAddTask = this.onAddTask.bind(this);
@@ -44,6 +45,8 @@ class TasksAndCategories extends Component {
     });
   }
 
+
+
   onSubmitEditCategory(title){
     this.props.updateCategoryAction(title, this.state.editedCategory);
   }
@@ -72,7 +75,11 @@ class TasksAndCategories extends Component {
           </div>
           <div className="row">
             <div className="col-xs-4">
-              <AllCategoriesList onEdit={this.onEditCategoryClick} onAddSubCategory={this.onAddSubCategoryClick}/>
+              <AllCategoriesList
+                selectedCategory={this.props.selectedCategory}
+                onSelect={this.props.onSelectCategory}
+                onEdit={this.onEditCategoryClick}
+                onAddSubCategory={this.onAddSubCategoryClick}/>
             </div>
             <div className="col-xs-8">
               <TasksList list={this.props.tasks}/>
@@ -89,9 +96,55 @@ class TasksAndCategories extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  tasks : state.tasks
-});
+
+function mapStateToProps(state, props){
+  function gatherChildsIds(parentsMap, curCatId){
+    let childs = parentsMap[curCatId];
+      if(!childs) return [curCatId];
+      return [curCatId, ...childs.map(function(cat){
+        return gatherChildsIds(parentsMap, cat.id);
+      }).reduce(function(res, curEl){
+          return res.concat(curEl);
+      }, [])];
+  }
+
+  function getParentCategoriesIds(categoryId){
+    var parentsMap = state.categories.reduce(function(res, cat){
+      if(!cat.parent) return res;
+      res[cat.parent] = res[cat.parent] || [];
+      res[cat.parent].push(cat);
+      return res;
+    }, {});
+
+    return gatherChildsIds(parentsMap, categoryId);
+  }
+
+  var tasks = state.tasks;
+  var selectedCategory;
+  if(props.filters.category){
+    selectedCategory = state.categories.find(function(cat){
+      return cat.id.toString() === props.filters.category;
+    });
+    var catsIds = getParentCategoriesIds(props.filters.category);    
+    if(catsIds.length){
+      tasks = state.tasks.filter(function(task){
+        return catsIds.indexOf(task.categoryId)!==-1;
+      });
+    }
+  }
+
+  return {
+    tasks : tasks,
+    selectedCategory:selectedCategory
+  };
+
+}
+
+TasksAndCategories.propTypes = {
+  filters:PropTypes.object.isRequired,
+  selectedCategory: PropTypes.object,
+  onSelectCategory : PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps,
   { addCategoryAction,  addTaskAction, updateCategoryAction })(TasksAndCategories);

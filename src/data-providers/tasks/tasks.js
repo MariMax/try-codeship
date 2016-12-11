@@ -67,11 +67,13 @@ var tasksList = [
   },
   {
     id: 6,
-    title: "Task 6"
+    title: "Task 6",
+    categoryId: 'cat4-1-1'
   },
   {
     id: 7,
-    title: "Task 7"
+    title: "Task 7",
+    categoryId: 'cat4-2'
   }
 ];
 
