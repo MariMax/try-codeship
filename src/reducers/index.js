@@ -13,11 +13,12 @@ function tasksReducer(state = [], action) {
   if(ACTION_ADD_TASK === action.type) {
     return [{
       id: state.length + 1,
-      title: action.title
+      title: action.title,
+      categoryId: action.category ? action.category.id : null
     }, ...state];
   }
+  
   if(ACTION_UPDATE_TASK === action.type) {
-    // console.log('actio', action)
     return state.map(function(task){
       if(task.id === action.task.id){
         return Object.assign({}, task, {

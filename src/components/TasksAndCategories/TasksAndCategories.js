@@ -51,8 +51,8 @@ class TasksAndCategories extends Component {
     this.props.updateCategoryAction(title, this.state.editedCategory);
   }
 
-  onAddTask(title) {
-    this.props.addTaskAction(title);
+  onAddTask(title) {    
+    this.props.addTaskAction(title, this.props.selectedCategory);
   }
 
   onHideModal() {
@@ -125,12 +125,19 @@ function mapStateToProps(state, props){
     selectedCategory = state.categories.find(function(cat){
       return cat.id.toString() === props.filters.category;
     });
-    var catsIds = getParentCategoriesIds(props.filters.category);    
+    var catsIds = getParentCategoriesIds(props.filters.category);
     if(catsIds.length){
       tasks = state.tasks.filter(function(task){
         return catsIds.indexOf(task.categoryId)!==-1;
       });
     }
+  }
+
+  if(props.filters.query){
+    var titleFilter = new RegExp(props.filters.query, 'i');
+    tasks = tasks.filter(function(task){
+      return titleFilter.test(task.title);
+    });
   }
 
   return {

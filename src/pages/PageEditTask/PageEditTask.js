@@ -15,8 +15,8 @@ class PageEditTask extends Component {
 
   componentWillReceiveProps(newProps) {
     if(newProps.task){
-      $(this.refs.tasktitle).val(newProps.task.title);
-      $(this.refs.description).val(newProps.task.description);
+      this.refs.tasktitle.value = newProps.task.title || '';
+      this.refs.description.value = newProps.task.description || '';
       if(newProps.category){
         this.setState({
           category:newProps.category
@@ -34,19 +34,18 @@ class PageEditTask extends Component {
   saveTask() {
     this.props.updateTaskAction(
     this.props.task,
-    $(this.refs.tasktitle).val(),
-    $(this.refs.description).val(),
+    this.refs.tasktitle.value,
+    this.refs.description.value,
     this.state.category);
   }
 
-  onSelectCategory(cat) {    
+  onSelectCategory(cat) {
     this.setState({
       category:cat
     });
   }
 
   render() {
-    // console.log(this.props);
     return (
         <div>
           <Header title="To-Do Item #1" showTaskFilter={false}/>

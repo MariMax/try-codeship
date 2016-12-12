@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 
 class InputForm extends Component {
@@ -34,8 +34,8 @@ class InputForm extends Component {
 }
 
 InputForm.propTypes = {
-  onSubmit : React.PropTypes.func.isRequired,
-  placeholder: React.PropTypes.string.isRequired
+  onSubmit : PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired
 }
 
 export default InputForm;
