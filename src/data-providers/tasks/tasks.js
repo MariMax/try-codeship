@@ -1,4 +1,3 @@
-// @TODO: field "subcategories" is unused now, need to remove it if this not will needed
 var categoriesList = [
   {
     id: 'cat1',
@@ -15,13 +14,11 @@ var categoriesList = [
   {
     id: 'cat4',
     title: "Category 4"
-    // subcategories:['cat4-1', 'cat4-2']
   },
   {
     id:'cat4-1',
     title: 'Category 4-1',
     parent: 'cat4'
-    // subcategories:['cat4-1-1', 'cat4-1-2']
   },
   {
     id:'cat4-1-1',
@@ -73,7 +70,8 @@ var tasksList = [
   {
     id: 7,
     title: "Task 7",
-    categoryId: 'cat4-2'
+    categoryId: 'cat4-2',
+    done: true
   }
 ];
 
