@@ -51,7 +51,7 @@ class TasksAndCategories extends Component {
     this.props.updateCategoryAction(title, this.state.editedCategory);
   }
 
-  onAddTask(title) {    
+  onAddTask(title) {
     this.props.addTaskAction(title, this.props.selectedCategory);
   }
 
@@ -119,7 +119,9 @@ function mapStateToProps(state, props){
     return gatherChildsIds(parentsMap, categoryId);
   }
 
-  var tasks = state.tasks;
+  var tasks = state.tasks.filter(function(task){
+    return !!task.done === !!props.filters.is_done;
+  });
   var selectedCategory;
   if(props.filters.category){
     selectedCategory = state.categories.find(function(cat){
@@ -132,6 +134,8 @@ function mapStateToProps(state, props){
       });
     }
   }
+  
+
 
   if(props.filters.query){
     var titleFilter = new RegExp(props.filters.query, 'i');

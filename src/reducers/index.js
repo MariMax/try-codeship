@@ -17,14 +17,15 @@ function tasksReducer(state = [], action) {
       categoryId: action.category ? action.category.id : null
     }, ...state];
   }
-  
+
   if(ACTION_UPDATE_TASK === action.type) {
     return state.map(function(task){
       if(task.id === action.task.id){
         return Object.assign({}, task, {
           title: action.title,
           description: action.description,
-          categoryId: action.category ? action.category.id : null
+          categoryId: action.category ? action.category.id : null,
+          done: action.done
         });
       }
       return Object.assign({}, task);

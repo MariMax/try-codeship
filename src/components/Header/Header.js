@@ -12,7 +12,7 @@ class Header extends Component {
         {(this.props.showTaskFilter?
           (<FilterForm
             className="form-inline pull-xs-right"
-            query={this.props.filterQuery}
+            filters={this.props.filters}
             onChange={this.props.onChangeFilter} />)
           :null
         )}
@@ -25,7 +25,7 @@ class Header extends Component {
 Header.propTypes = {
   showTaskFilter : PropTypes.bool,
   onChangeFilter : PropTypes.func,
-  filterQuery: PropTypes.string
+  filters: PropTypes.object
 }
 
 export default Header;

@@ -9,19 +9,20 @@ class PageEditTask extends Component {
   constructor() {
     super();
     this.state = {
-      category:null
+      category:null,
+      isDone:false
     };
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.task){
-      this.refs.tasktitle.value = newProps.task.title || '';
-      this.refs.description.value = newProps.task.description || '';
-      if(newProps.category){
-        this.setState({
-          category:newProps.category
-        });
-      }
+    let task = newProps.task;
+    if(task){
+      this.refs.tasktitle.value = task.title || '';
+      this.refs.description.value = task.description || '';
+      this.setState({
+        category:newProps.category,
+        isDone: !!task.done
+      });
     }
   }
 
@@ -36,12 +37,19 @@ class PageEditTask extends Component {
     this.props.task,
     this.refs.tasktitle.value,
     this.refs.description.value,
-    this.state.category);
+    this.state.category,
+    this.state.isDone);
   }
 
   onSelectCategory(cat) {
     this.setState({
       category:cat
+    });
+  }
+
+  onDoneChanged(e){
+    this.setState({
+      isDone:e.target.checked
     });
   }
 
@@ -65,7 +73,10 @@ class PageEditTask extends Component {
                   </div>
                   <div className="form-check">
                     <label className="form-check-label">
-                      <input className="form-check-input" type="checkbox" value=""/> &nbsp; Active
+                      <input className="form-check-input"
+                        type="checkbox"
+                        onChange={this.onDoneChanged.bind(this)}
+                        checked={this.state.isDone}/> &nbsp; Done
                     </label>
                   </div>
                   <div className="form-group">

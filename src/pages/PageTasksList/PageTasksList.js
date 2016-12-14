@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from 'components/Header/Header';
 import ProgressBar from 'components/ProgressBar/ProgressBar';
-import TasksAndCategories from 'components/TasksAndCategories/TasksAndCategories'
+import TasksAndCategories from 'components/TasksAndCategories/TasksAndCategories';
+import _ from 'lodash';
 
 class PageTasksList extends Component {
 
@@ -13,50 +14,37 @@ class PageTasksList extends Component {
       category:null
     }
     this.onSelectCategory = this.onSelectCategory.bind(this);
-    this.onChangeFilter = this.onChangeFilter.bind(this);
+    this.onChangeFilterHandler = this.onChangeFilterHandler.bind(this);
   }
 
-  onChangeFilter(filterData){
-    var query = filterData.query;
-    if(query.length){
-      this.props.router.push({
-        query: Object.assign(this.props.filters, {
-          query: query
-        })
-      });
-    }
-    else if(this.props.filters.query){
-      delete this.props.filters.query;
-      this.props.router.push({
-        query:this.props.filters
-      });
-    }
+  updateFilters(filterData) {
+    this.props.router.push({
+      query: _(Object.assign(this.props.filters, filterData))
+        .omitBy(function(val){
+          return !val;          
+        }).value()
+    });
+  }
+
+  onChangeFilterHandler(filterData) {
+    this.updateFilters(filterData);
   }
 
   onSelectCategory(category) {
     var filterCategory = this.props.filters.category;
     var newCat = !filterCategory || filterCategory !== category.id ? category : null;
-    if(!newCat){
-      delete this.props.filters.category;
-      this.props.router.push({
-        query: this.props.filters
-      });
-    }
-    else {
-      this.props.router.push({
-        query: Object.assign(this.props.filters, {
-          category: newCat && newCat.id
-        })
-      });
-    }
+    this.updateFilters({
+      category: newCat && newCat.id
+    });
   }
   render() {
     return (
         <div>
           <Header
             title="To-Do List"
+            filters={this.props.filters}
             showTaskFilter={true}
-            onChangeFilter={this.onChangeFilter}/>
+            onChangeFilter={this.onChangeFilterHandler}/>
           <ProgressBar/>
           <TasksAndCategories
             filters={this.props.filters}
