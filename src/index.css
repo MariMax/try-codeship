@@ -21,3 +21,10 @@ body {
 .text-default {
   color: #373a3c;
 }
+.text-white, .text-white:hover {
+  color: #fff;
+}
+
+.d-flex {
+  display: flex;
+}

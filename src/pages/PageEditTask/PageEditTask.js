@@ -33,12 +33,12 @@ class PageEditTask extends Component {
   }
 
   saveTask() {
-    this.props.updateTaskAction(
-    this.props.task,
-    this.refs.tasktitle.value,
-    this.refs.description.value,
-    this.state.category,
-    this.state.isDone);
+    this.props.updateTaskAction(this.props.task, {
+      title: this.refs.tasktitle.value,
+      description: this.refs.description.value,
+      category: this.state.category,
+      done: this.state.isDone
+    });
   }
 
   onSelectCategory(cat) {

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { IndexLink } from 'react-router'
 import FilterForm from './components/FilterForm/FilterForm';
 
 class Header extends Component {
@@ -8,7 +9,9 @@ class Header extends Component {
     return (
       <header className="navbar navbar-static-top navbar-dark bg-inverse">
         <div className="container">
-        <h3 className="text-white pull-xs-left">{this.props.title}</h3>
+        <h3 className="text-white pull-xs-left">
+          <IndexLink className="text-white" to="/">{this.props.title}</IndexLink>
+        </h3>
         {(this.props.showTaskFilter?
           (<FilterForm
             className="form-inline pull-xs-right"

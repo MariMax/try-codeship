@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { addCategoryAction } from 'actions/addCategoryAction';
 import { updateCategoryAction } from 'actions/updateCategoryAction';
 import { addTaskAction } from 'actions/addTaskAction';
+import { updateTaskAction } from 'actions/updateTaskAction';
 
 class TasksAndCategories extends Component {
   constructor() {
@@ -21,8 +22,11 @@ class TasksAndCategories extends Component {
     this.onSubmitAddSubCategory = this.onSubmitAddSubCategory.bind(this);
     this.onEditCategoryClick = this.onEditCategoryClick.bind(this);
     this.onSubmitEditCategory = this.onSubmitEditCategory.bind(this);
+    this.onDoneChange = this.onDoneChange.bind(this);
   }
-
+  onDoneChange(task, isDone){
+    this.props.updateTaskAction(task, { done: isDone} );
+  }
   onAddCategory(title) {
     this.props.addCategoryAction(title);
   }
@@ -82,7 +86,7 @@ class TasksAndCategories extends Component {
                 onAddSubCategory={this.onAddSubCategoryClick}/>
             </div>
             <div className="col-xs-8">
-              <TasksList list={this.props.tasks}/>
+              <TasksList onDoneChange={this.onDoneChange} list={this.props.tasks}/>
             </div>
           </div>
           {this.state.addSubCategoryFor?(
@@ -134,7 +138,7 @@ function mapStateToProps(state, props){
       });
     }
   }
-  
+
 
 
   if(props.filters.query){
@@ -158,4 +162,4 @@ TasksAndCategories.propTypes = {
 }
 
 export default connect(mapStateToProps,
-  { addCategoryAction,  addTaskAction, updateCategoryAction })(TasksAndCategories);
+  { addCategoryAction,  addTaskAction, updateCategoryAction, updateTaskAction })(TasksAndCategories);

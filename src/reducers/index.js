@@ -5,6 +5,7 @@ import { ACTION_ADD_TASK } from 'actions/addTaskAction';
 import { ACTION_UPDATE_TASK } from 'actions/updateTaskAction';
 
 import { combineReducers } from 'redux';
+import _ from 'lodash';
 
 function tasksReducer(state = [], action) {
   if(ACTION_SET_TASKS_AND_CATEGORIES === action.type) {
@@ -21,12 +22,18 @@ function tasksReducer(state = [], action) {
   if(ACTION_UPDATE_TASK === action.type) {
     return state.map(function(task){
       if(task.id === action.task.id){
-        return Object.assign({}, task, {
-          title: action.title,
-          description: action.description,
-          categoryId: action.category ? action.category.id : null,
-          done: action.done
-        });
+        return Object.assign({}, task,
+          _.reduce(action.updates, function(result, value, key){
+            switch (key) {
+              case 'category':
+                result['categoryId'] = value&&value.id;
+                break;
+              default:
+                result[key] = value;
+                break;
+            }
+            return result;
+          }, {}));
       }
       return Object.assign({}, task);
     });
@@ -50,7 +57,7 @@ function categoriesReducer(state = [], action){
 
   if (ACTION_UPDATE_CATEGORY === action.type) {
     return state.map(function(category){
-      if(category.id === action.category.id){        
+      if(category.id === action.category.id){
         return Object.assign({}, category, { title: action.title });
       }
       return Object.assign({}, category);
