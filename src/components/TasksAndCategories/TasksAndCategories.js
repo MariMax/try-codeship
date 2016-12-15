@@ -133,7 +133,7 @@ function mapStateToProps(state, props){
     });
     var catsIds = getParentCategoriesIds(props.filters.category);
     if(catsIds.length){
-      tasks = state.tasks.filter(function(task){
+      tasks = tasks.filter(function(task){
         return catsIds.indexOf(task.categoryId)!==-1;
       });
     }
