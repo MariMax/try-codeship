@@ -50,8 +50,8 @@ function categoriesReducer(state = [], action){
 
   if (ACTION_UPDATE_CATEGORY === action.type) {
     return state.map(function(category){
-      if(category.id === action.category.id){
-        return Object.assign({}, action.category, { title: action.title });
+      if(category.id === action.category.id){        
+        return Object.assign({}, category, { title: action.title });
       }
       return Object.assign({}, category);
     });
