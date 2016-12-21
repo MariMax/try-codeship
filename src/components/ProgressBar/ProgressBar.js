@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
+
+import { getCategoriesIdsWithUncompletedTasks, getCategoriesIdsWithTasks } from 'utils/utils';
+
+
 
 class ProgressBar extends Component {
   render() {
@@ -10,19 +13,9 @@ class ProgressBar extends Component {
   }
 }
 
-function mapStateToProps(state, props){
-  let tasksWithCats = state.tasks.filter(function(task){
-    return task.categoryId;
-  });
-  let countUncomplitedCats = _.uniq(tasksWithCats.filter(function(task){
-    return !task.done;
-  }).map(function(task){
-    return task.categoryId;
-  })).length;
-
-  let countCategoriesWithTasks = _.uniq(tasksWithCats.map(function(task){
-    return task.categoryId;
-  })).length;
+function mapStateToProps(state, props) { 
+  let countUncomplitedCats = getCategoriesIdsWithUncompletedTasks(state.tasks).length;  
+  let countCategoriesWithTasks = getCategoriesIdsWithTasks(state.tasks).length;
 
   return {
     completed: countCategoriesWithTasks - countUncomplitedCats,

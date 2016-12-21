@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import CategoriesList from '../CategoriesList/CategoriesList';
 import { connect } from 'react-redux';
+import CategoriesTree from 'utils/categories-tree'
 
 class AllCategoriesList extends Component {
   render(){
@@ -16,43 +17,18 @@ class AllCategoriesList extends Component {
 }
 
 function mapStateToProps(state, props) {
-  function selectBranch(cat){
-    cat.selected = true;
-    if(cat.__parentLink){
-      selectBranch(cat.__parentLink);
-    }
-  }
-  function createCategoriesTree(plainList) {
-    var categoriesList = [];
-    var cache = {};
-    plainList.forEach(function(cat){
-      cache[cat.id] = Object.assign(cache[cat.id] || {},
-                                    {
-                                      id: cat.id,
-                                      title: cat.title
-                                    });
-      if(cat.parent){
-        cache[cat.parent] = cache[cat.parent] || {};
-        cache[cat.id].__parentLink = cache[cat.parent];
-        cache[cat.parent].subcategories = cache[cat.parent].subcategories || [];
-        cache[cat.parent].subcategories.push(cache[cat.id]);
-      }
-      else{
-        categoriesList.push(cache[cat.id]);
-      }
-      if(props.selectedCategory && props.selectedCategory.id === cat.id){
-        selectBranch(cache[cat.id]);
-      }
-    });
-    return categoriesList;
-  }
+  let categoriesTree = new CategoriesTree(state.categories);
+  if(props.selectedCategory) categoriesTree.selectBranch(props.selectedCategory);
+  if(props.excludedCategories) categoriesTree.safeRemoveCategories(props.excludedCategories);
 
+  
   return {
-    categories: createCategoriesTree(state.categories)
+    categories: categoriesTree.getTree()
   };
 }
 
 AllCategoriesList.propTypes = {
+  excludedCategories : PropTypes.array,
   selectedCategory: PropTypes.object,
   onAddSubCategory: PropTypes.func,
   onEdit: PropTypes.func,

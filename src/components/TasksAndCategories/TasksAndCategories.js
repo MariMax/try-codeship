@@ -10,6 +10,8 @@ import { updateCategoryAction } from 'actions/updateCategoryAction';
 import { addTaskAction } from 'actions/addTaskAction';
 import { updateTaskAction } from 'actions/updateTaskAction';
 
+import { getCategoriesIdsWithUncompletedTasks, getCategoriesIdsWithCompletedTasks } from 'utils/utils';
+
 class TasksAndCategories extends Component {
   constructor() {
     super();
@@ -80,6 +82,7 @@ class TasksAndCategories extends Component {
           <div className="row">
             <div className="col-xs-4">
               <AllCategoriesList
+                excludedCategories={this.props.excludedCategories}
                 selectedCategory={this.props.selectedCategory}
                 onSelect={this.props.onSelectCategory}
                 onEdit={this.onEditCategoryClick}
@@ -100,29 +103,27 @@ class TasksAndCategories extends Component {
   }
 }
 
+function getCurrentAndChildCategoriesIds(categoryId, categories){
+  var parentsMap = categories.reduce(function(res, cat){
+    if(!cat.parent) return res;
+    res[cat.parent] = res[cat.parent] || [];
+    res[cat.parent].push(cat);
+    return res;
+  }, {});
+  return gatherChildsIds(parentsMap, categoryId);
+}
+
+function gatherChildsIds(parentsMap, curCatId){
+  let childs = parentsMap[curCatId];
+    if(!childs) return [curCatId];
+    return [curCatId, ...childs.map(function(cat){
+      return gatherChildsIds(parentsMap, cat.id);
+    }).reduce(function(res, curEl){
+        return res.concat(curEl);
+    }, [])];
+}
 
 function mapStateToProps(state, props){
-  function gatherChildsIds(parentsMap, curCatId){
-    let childs = parentsMap[curCatId];
-      if(!childs) return [curCatId];
-      return [curCatId, ...childs.map(function(cat){
-        return gatherChildsIds(parentsMap, cat.id);
-      }).reduce(function(res, curEl){
-          return res.concat(curEl);
-      }, [])];
-  }
-
-  function getParentCategoriesIds(categoryId){
-    var parentsMap = state.categories.reduce(function(res, cat){
-      if(!cat.parent) return res;
-      res[cat.parent] = res[cat.parent] || [];
-      res[cat.parent].push(cat);
-      return res;
-    }, {});
-
-    return gatherChildsIds(parentsMap, categoryId);
-  }
-
   var tasks = state.tasks.filter(function(task){
     return !!task.done === !!props.filters.is_done;
   });
@@ -131,7 +132,7 @@ function mapStateToProps(state, props){
     selectedCategory = state.categories.find(function(cat){
       return cat.id.toString() === props.filters.category;
     });
-    var catsIds = getParentCategoriesIds(props.filters.category);
+    var catsIds = getCurrentAndChildCategoriesIds(props.filters.category, state.categories);
     if(catsIds.length){
       tasks = tasks.filter(function(task){
         return catsIds.indexOf(task.categoryId)!==-1;
@@ -148,9 +149,13 @@ function mapStateToProps(state, props){
     });
   }
 
+
+
   return {
     tasks : tasks,
-    selectedCategory:selectedCategory
+    selectedCategory:selectedCategory,
+    excludedCategories: (props.filters.is_done) ? getCategoriesIdsWithUncompletedTasks(state.tasks) 
+                                                : getCategoriesIdsWithCompletedTasks(state.tasks)
   };
 
 }
