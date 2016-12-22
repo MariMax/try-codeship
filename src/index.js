@@ -1,6 +1,4 @@
 import 'jquery';
-// import 'bootstrap-loader';
-// import 'bootstrap/dist/css/bootstrap-flex.css';
 import './index.css';
 
 import React from 'react';
