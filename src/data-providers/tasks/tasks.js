@@ -43,11 +43,14 @@ var categoriesList = [
 var tasksList = [
   {
     id: 1,
-    title: "Task 1"
+    title: "Task 1",
+    categoryId: 'cat1'
   },
   {
     id: 2,
-    title: "Task 2"
+    title: "Task 2",
+    categoryId: 'cat2',
+    done:true
   },
   {
     id: 3,
@@ -56,11 +59,14 @@ var tasksList = [
   },
   {
     id: 4,
-    title: "Task 4"
+    title: "Task 4",
+    categoryId: 'cat5'
   },
   {
     id: 5,
-    title: "Task 5"
+    title: "Task 5",
+    categoryId: 'cat5',
+    done:true
   },
   {
     id: 6,

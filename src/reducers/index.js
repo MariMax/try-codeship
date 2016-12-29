@@ -3,6 +3,7 @@ import { ACTION_ADD_CATEGORY } from 'actions/addCategoryAction';
 import { ACTION_UPDATE_CATEGORY } from 'actions/updateCategoryAction';
 import { ACTION_ADD_TASK } from 'actions/addTaskAction';
 import { ACTION_UPDATE_TASK } from 'actions/updateTaskAction';
+import { ACTION_REMOVE_CATEGORY } from 'actions/removeCategoryAction';
 
 import { combineReducers } from 'redux';
 import _ from 'lodash';
@@ -38,6 +39,11 @@ function tasksReducer(state = [], action) {
       return Object.assign({}, task);
     });
   }
+
+  if (ACTION_REMOVE_CATEGORY === action.type){
+    return state.filter(task => action.categoriesIds.indexOf(task.categoryId)===-1);
+  }
+
   return state;
 }
 
@@ -51,7 +57,7 @@ function categoriesReducer(state = [], action){
       title: action.title,
       id: state.length + 1,
       parent: action.parent && action.parent.id
-    }
+    };
     return [newCategory, ...state];
   }
 
@@ -62,6 +68,10 @@ function categoriesReducer(state = [], action){
       }
       return Object.assign({}, category);
     });
+  }
+
+  if (ACTION_REMOVE_CATEGORY === action.type){
+    return state.filter(cat => action.categoriesIds.indexOf(cat.id)===-1);
   }
 
   return state;

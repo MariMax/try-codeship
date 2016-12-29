@@ -12,7 +12,7 @@ class PageTasksList extends Component {
     super();
     this.state = {
       category:null
-    }
+    };
     this.onSelectCategory = this.onSelectCategory.bind(this);
     this.onChangeFilterHandler = this.onChangeFilterHandler.bind(this);
   }

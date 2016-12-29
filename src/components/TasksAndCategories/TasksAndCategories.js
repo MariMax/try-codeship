@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import InputForm from '../InputForm/InputForm';
 import InputModal from '../InputModal/InputModal';
-import AllCategoriesList from '../AllCategoriesList/AllCategoriesList';
+import CategoriesList from '../CategoriesList/CategoriesList';
 import TasksList from '../TasksList/TasksList';
 import { connect } from 'react-redux';
 
@@ -9,8 +9,9 @@ import { addCategoryAction } from 'actions/addCategoryAction';
 import { updateCategoryAction } from 'actions/updateCategoryAction';
 import { addTaskAction } from 'actions/addTaskAction';
 import { updateTaskAction } from 'actions/updateTaskAction';
+import { removeCategoryAction } from 'actions/removeCategoryAction';
+import CategoriesTree, { CategoryStatus } from 'utils/categories-tree';
 
-import { getCategoriesIdsWithUncompletedTasks, getCategoriesIdsWithCompletedTasks } from 'utils/utils';
 
 class TasksAndCategories extends Component {
   constructor() {
@@ -25,6 +26,7 @@ class TasksAndCategories extends Component {
     this.onEditCategoryClick = this.onEditCategoryClick.bind(this);
     this.onSubmitEditCategory = this.onSubmitEditCategory.bind(this);
     this.onDoneChange = this.onDoneChange.bind(this);
+    this.onRemoveCategoryClick = this.onRemoveCategoryClick.bind(this);
   }
   onDoneChange(task, isDone){
     this.props.updateTaskAction(task, { done: isDone} );
@@ -44,13 +46,18 @@ class TasksAndCategories extends Component {
     });
   }
 
+  onRemoveCategoryClick(category) {
+    if(confirm(`Do you really want remove category "${category.title}"?`)){
+      this.props.removeCategoryAction(category);
+    }
+  }
+
   onEditCategoryClick(category) {
     this.setState({
       addSubCategoryFor:null,
       editedCategory: category
     });
   }
-
 
 
   onSubmitEditCategory(title){
@@ -75,18 +82,22 @@ class TasksAndCategories extends Component {
             <div className="pull-xs-left">
               <InputForm onSubmit={this.onAddCategory} placeholder="Enter category title"/>
             </div>
-            <div className="pull-xs-right">
-              <InputForm onSubmit={this.onAddTask} placeholder="Enter new task title"/>
-            </div>
+            {
+              this.props.selectedCategory ?
+                (<div className="pull-xs-right">
+                  <InputForm onSubmit={this.onAddTask} placeholder="Enter new task title"/>
+                </div>) : null
+            }
           </div>
           <div className="row">
             <div className="col-xs-4">
-              <AllCategoriesList
-                excludedCategories={this.props.excludedCategories}
-                selectedCategory={this.props.selectedCategory}
-                onSelect={this.props.onSelectCategory}
-                onEdit={this.onEditCategoryClick}
-                onAddSubCategory={this.onAddSubCategoryClick}/>
+              <CategoriesList
+                  className="list-group pre-scrollable categories-list"
+                  onEdit={this.onEditCategoryClick}
+                  onAddSubCategory={this.onAddSubCategoryClick}
+                  onSelect={this.props.onSelectCategory}
+                  onRemove={this.onRemoveCategoryClick}
+                  list={this.props.categoriesTree}/>
             </div>
             <div className="col-xs-8">
               <TasksList onDoneChange={this.onDoneChange} list={this.props.tasks}/>
@@ -103,68 +114,43 @@ class TasksAndCategories extends Component {
   }
 }
 
-function getCurrentAndChildCategoriesIds(categoryId, categories){
-  var parentsMap = categories.reduce(function(res, cat){
-    if(!cat.parent) return res;
-    res[cat.parent] = res[cat.parent] || [];
-    res[cat.parent].push(cat);
-    return res;
-  }, {});
-  return gatherChildsIds(parentsMap, categoryId);
-}
-
-function gatherChildsIds(parentsMap, curCatId){
-  let childs = parentsMap[curCatId];
-    if(!childs) return [curCatId];
-    return [curCatId, ...childs.map(function(cat){
-      return gatherChildsIds(parentsMap, cat.id);
-    }).reduce(function(res, curEl){
-        return res.concat(curEl);
-    }, [])];
-}
-
 function mapStateToProps(state, props){
-  var tasks = state.tasks.filter(function(task){
-    return !!task.done === !!props.filters.is_done;
-  });
-  var selectedCategory;
-  if(props.filters.category){
-    selectedCategory = state.categories.find(function(cat){
-      return cat.id.toString() === props.filters.category;
-    });
-    var catsIds = getCurrentAndChildCategoriesIds(props.filters.category, state.categories);
-    if(catsIds.length){
-      tasks = tasks.filter(function(task){
-        return catsIds.indexOf(task.categoryId)!==-1;
-      });
-    }
-  }
-
-
+  let selectedCategory;
+  let tasks = state.tasks;
+  let categoriesTree = new CategoriesTree(state.categories);
+  let isDone = !!props.filters.is_done;
 
   if(props.filters.query){
     var titleFilter = new RegExp(props.filters.query, 'i');
-    tasks = tasks.filter(function(task){
-      return titleFilter.test(task.title);
+    categoriesTree.addTasks(tasks.filter(task => !!task.done === isDone && titleFilter.test(task.title)));
+    categoriesTree.getList().forEach(function(cat){
+      cat.hidden = !cat.tasks.length;
+    });
+  }
+  else{
+    categoriesTree.addTasks(tasks);
+    categoriesTree.getList().forEach(function(cat){
+      cat.hidden = cat.hidden || cat.isStatus((isDone ? CategoryStatus.UNCOMPLETED : CategoryStatus.COMPLETED));
     });
   }
 
-
+  if(props.filters.category){
+    selectedCategory = categoriesTree.getCategory(props.filters.category);
+    if(selectedCategory&&!selectedCategory.hidden) categoriesTree.selectBranch(selectedCategory);
+  }
 
   return {
-    tasks : tasks,
-    selectedCategory:selectedCategory,
-    excludedCategories: (props.filters.is_done) ? getCategoriesIdsWithUncompletedTasks(state.tasks) 
-                                                : getCategoriesIdsWithCompletedTasks(state.tasks)
+    tasks : selectedCategory?selectedCategory.tasks.filter(task => !!task.done === isDone):[],
+    categoriesTree: categoriesTree.getTree(),
+    selectedCategory:selectedCategory && !selectedCategory.hidden ? selectedCategory:null
   };
 
 }
 
 TasksAndCategories.propTypes = {
   filters:PropTypes.object.isRequired,
-  selectedCategory: PropTypes.object,
   onSelectCategory : PropTypes.func.isRequired
-}
+};
 
 export default connect(mapStateToProps,
-  { addCategoryAction,  addTaskAction, updateCategoryAction, updateTaskAction })(TasksAndCategories);
+  { addCategoryAction,  addTaskAction, updateCategoryAction, updateTaskAction, removeCategoryAction })(TasksAndCategories);

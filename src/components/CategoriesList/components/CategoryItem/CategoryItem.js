@@ -35,12 +35,15 @@ class CategoryItem extends Component {
           {this.props.onEdit
             ?(<button onClick={()=>this.props.onEdit(cat)} className="pull-xs-right">edit</button>):null}
           {this.props.onSelect
-              ?(<button onClick={()=>this.props.onSelect(cat)} className="pull-xs-right">set</button>):null}
+            ?(<button onClick={()=>this.props.onSelect(cat)} className="pull-xs-right">set</button>):null}
+          {this.props.onRemove
+            ?(<button onClick={()=>this.props.onRemove(cat)} className="pull-xs-right">del</button>):null}
           {(hasSub&&this.state.subListOpened)?(
             <CategoriesList
               className="list-group m-t-1"
               onEdit={this.props.onEdit}
               onSelect={this.props.onSelect}
+              onRemove={this.props.onRemove}
               onAddSubCategory={this.props.onAddSubCategory}
               list={cat.subcategories}/>):null}
         </li>
@@ -53,7 +56,8 @@ CategoryItem.propTypes = {
   isSelected: PropTypes.bool,
   onAddSubCategory: PropTypes.func,
   onEdit: PropTypes.func,
-  onSelect: PropTypes.func
-}
+  onSelect: PropTypes.func,
+  onRemove: PropTypes.func
+};
 
 export default CategoryItem;

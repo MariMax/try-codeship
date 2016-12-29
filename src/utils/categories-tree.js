@@ -1,21 +1,117 @@
+export const CategoryStatus = {
+  EMPTY: 1,
+  COMPLETED: 1 << 1,
+  UNCOMPLETED: 1 << 2
+};
+
+class CategoryWrapper {
+
+  constructor(rawCategoryData){
+    if(rawCategoryData && typeof rawCategoryData === 'object') this.setRawData(rawCategoryData);
+    else this.setRawData({id: rawCategoryData});
+    this.subCategories = [];
+    this.tasksList = [];
+    this.hiddenState = false;
+  }
+
+  setRawData(rawData){
+
+    if(this.rawData && this.rawData.id !== rawData.id){
+      throw new Error('ID of new category data not match with exist');
+    }
+    this.rawData = rawData;
+  }
+
+  pushSubCategory(subCategoryWrapper){
+    subCategoryWrapper.parent = this;
+    this.subCategories.push(subCategoryWrapper);
+  }
+
+  selectWithParents(){
+    this.selected = true;
+    if(this.parent) this.parent.selectWithParents();
+  }
+
+  pushTask(task){
+    this.tasksList.push(task);
+  }
+
+  isStatus(statusMask){
+    return !!(this.status & statusMask);
+  }
+
+  // Get category id with all subcategories ids
+  getAllIds() {
+    return [this.id, ...this.subCategories.map(cat => cat.getAllIds())
+        .reduce((res, idsList)=>res.concat(idsList), [])];
+  }
 
 
-export default function CategoriesTree(plainCategoriesList) {
+  get status(){
+    if(!this.subCategories.length && !this.tasksList.length){
+      return CategoryStatus.EMPTY;
+    }
+    if(this.tasksList.some(task => !task.done)
+        || this.subCategories.some(cat => cat.isStatus(CategoryStatus.UNCOMPLETED | CategoryStatus.EMPTY))){
+      return CategoryStatus.UNCOMPLETED;
+    }
+    return CategoryStatus.COMPLETED;
+  }
 
+  get subcategories(){
+    return this.subCategories.filter(cat => !cat.hidden);
+  }
+
+  get id(){
+    return this.rawData.id;
+  }
+
+  get title(){
+    return this.rawData.title;
+  }
+
+  get hidden(){
+    return this.hiddenState && !this.subcategories.length;
+  }
+
+  set hidden(hidden){
+    this.hiddenState = hidden;
+  }
+
+  get tasks(){
+    return this.tasksList;
+  }
+}
+
+export default function CategoriesTree(plainCategoriesList, plainTasksList) {
   var cache = {};
+
+  function getCategoryWrapper(categoryIdOrData){
+    var category = getCategory(categoryIdOrData);
+    if(!category){
+      category = new CategoryWrapper(categoryIdOrData);
+      cache[category.id] = category;
+    }
+    else if(typeof categoryIdOrData === 'object'){
+      category.setRawData(categoryIdOrData);
+    }
+    return category;
+  }
+
+  function addTasks(tasksList){
+    tasksList.forEach(task => task.categoryId && getCategory(task.categoryId).pushTask(task));
+  }
+
   plainCategoriesList.forEach(function(cat){
-    cache[cat.id] = Object.assign(cache[cat.id] || {},
-                                  {
-                                    id: cat.id,
-                                    title: cat.title
-                                  });
+    var category = getCategoryWrapper(cat);
     if(cat.parent){
-      cache[cat.parent] = cache[cat.parent] || {};
-      cache[cat.id].__parentLink = cache[cat.parent];
-      cache[cat.parent].subcategories = cache[cat.parent].subcategories || [];
-      cache[cat.parent].subcategories.push(cache[cat.id]);
+      getCategoryWrapper(cat.parent).pushSubCategory(category);
     }
   });
+
+  if(Array.isArray(plainTasksList)){
+    addTasks(plainTasksList);
+  }
 
 
 
@@ -24,47 +120,24 @@ export default function CategoriesTree(plainCategoriesList) {
     return cache[category];
   }
 
-  function selectBranch(cat) {
-    cat.selected = true;
-    if(cat.__parentLink){
-      selectBranch(cat.__parentLink);
-    }
-  }
-  
-  function removeCategory(category) {
-    category = getCategory(category);
-    if(category.__parentLink){
-      var subCats = category.__parentLink.subcategories;
-      subCats.splice(subCats.indexOf(category), 1);
-    }
-    delete cache[category.id];
-  }
+  this.getList = function(){
+    return Object.values(cache);
+  };
 
   this.getTree = function() {
-    return Object.values(cache).filter(function(category){
-      return !category.__parentLink;
+    return this.getList().filter(function(category){
+      return !category.parent && !category.hidden;
     });
-  }
+  }.bind(this);
 
   this.selectBranch = function(category) {
-    selectBranch(getCategory(category));
-  }
+    this.getList().forEach(cat => cat.selected = false);
+    getCategory(category).selectWithParents();
+  }.bind(this);
 
-  this.safeRemoveCategories = function(categoriesList) {
-    categoriesList = categoriesList.map(getCategory);
+  this.addTasks = addTasks;
+  this.getCategory = getCategory;
 
-    categoriesList.forEach(function(category){     
-      cache[category.id].__to_remove = true;
-    });
-
-    categoriesList.forEach(function(category){
-      if(!category.subcategories || category.subcategories.every(function(subCat){
-        return cache[subCat.id].__to_remove;
-      })){
-        removeCategory(category);
-      }
-    });
-  }        
 
 }
 

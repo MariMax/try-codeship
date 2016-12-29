@@ -2,14 +2,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from 'components/Header/Header';
-import AllCategoriesList from 'components/AllCategoriesList/AllCategoriesList';
+import CategoriesList from 'components/CategoriesList/CategoriesList';
+import CategoriesTree from 'utils/categories-tree';
 import { updateTaskAction } from 'actions/updateTaskAction';
 
 class PageEditTask extends Component {
   constructor() {
     super();
     this.state = {
-      category:null,
+      categoryId:null,
       isDone:false
     };
   }
@@ -17,10 +18,11 @@ class PageEditTask extends Component {
   componentWillReceiveProps(newProps) {
     let task = newProps.task;
     if(task){
+      this.categoriesTree = new CategoriesTree(newProps.categories);
       this.refs.tasktitle.value = task.title || '';
       this.refs.description.value = task.description || '';
       this.setState({
-        category:newProps.category,
+        category:this.categoriesTree.getCategory(task.categoryId),
         isDone: !!task.done
       });
     }
@@ -54,13 +56,23 @@ class PageEditTask extends Component {
   }
 
   render() {
+    let categoriesTree = [];
+    if(this.categoriesTree){
+      this.categoriesTree.selectBranch(this.state.category);
+      categoriesTree = this.categoriesTree.getTree();
+    }
+
+
     return (
         <div>
           <Header title="To-Do Item #1" showTaskFilter={false}/>
           <div className="container">
             <div className="row m-t-1">
               <div className="col-xs-4">
-                <AllCategoriesList selectedCategory={this.state.category} onSelect={this.onSelectCategory.bind(this)}/>
+                <CategoriesList
+                    className="list-group pre-scrollable categories-list"
+                    onSelect={this.onSelectCategory.bind(this)}
+                    list={categoriesTree}/>
               </div>
               <div className="col-xs-8">
                <form onSubmit={this.handleSubmit.bind(this)}>
@@ -92,20 +104,11 @@ class PageEditTask extends Component {
 }
 function mapStateToProps(state, props){
   let taskId = parseInt(props.routeParams.taskId, 10);
-  let task = state.tasks.find(function(task){
-    return taskId === task.id;
-  });
-  let category;
-
-  if(task){
-    category = state.categories.find(function(cat){
-      return task.categoryId === cat.id;
-    });
-  }
-
   return {
-    task: task,
-    category:category
+    task: state.tasks.find(function(task){
+      return taskId === task.id;
+    }),
+    categories:state.categories
   };
 }
 export default connect(mapStateToProps, {updateTaskAction:updateTaskAction})(PageEditTask);

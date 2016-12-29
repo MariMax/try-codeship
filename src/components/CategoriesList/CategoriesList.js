@@ -12,6 +12,7 @@ function CategoriesList(props){
             isSelected={category.selected}
             onEdit={props.onEdit}
             onSelect={props.onSelect}
+            onRemove={props.onRemove}
             onAddSubCategory={props.onAddSubCategory}/>)}
       </ul>
     );
@@ -21,7 +22,8 @@ CategoriesList.propTypes = {
   list : PropTypes.array.isRequired,
   onAddSubCategory: PropTypes.func,
   onEdit: PropTypes.func,
-  onSelect: PropTypes.func
-}
+  onSelect: PropTypes.func,
+  onRemove: PropTypes.func
+};
 
 export default CategoriesList;
