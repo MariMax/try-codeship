@@ -20,7 +20,7 @@ styleLoaders:
 # It depends on value of NODE_ENV environment variable
 # This param can also be set in webpack config:
 #   entry: 'bootstrap-loader/extractStyles'
-extractStyles: false
+extractStyles: true
 # env:
 #   development:
 #     extractStyles: false
@@ -45,7 +45,7 @@ extractStyles: false
 # Import your custom styles here
 # Usually this endpoint-file contains list of @imports of your application styles
 #
-# appStyles: ./path/to/your/app/styles/endpoint.scss
+appStyles: ./src/styles/theme.scss
 
 
 ### Bootstrap styles

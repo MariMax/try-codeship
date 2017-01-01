@@ -8,6 +8,7 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -32,6 +33,7 @@ module.exports = {
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
   entry: [
+    'bootstrap-loader',
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
     // When you save a file, the client will either apply hot updates (in case
@@ -46,7 +48,7 @@ module.exports = {
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Finally, this is your app's code:
-    'bootstrap-loader',
+
     paths.appIndexJs
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
@@ -119,9 +121,22 @@ module.exports = {
       // "style" loader turns CSS into JS modules that inject <style> tags.
       // In production, we use a plugin to extract that CSS to a file, but
       // in development "style" loader enables hot editing of CSS.
+      // {
+      //   test: /\.css$/,
+      //   loader: 'style!css?importLoaders=1!postcss'
+      // },
       {
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1!postcss'
+        // "?-autoprefixer" disables autoprefixer in css-loader itself:
+        // https://github.com/webpack/css-loader/issues/281
+        // We already have it thanks to postcss. We only pass this flag in
+        // production because "css" loader only enables autoprefixer-powered
+        // removal of unnecessary prefixes when Uglify plugin is enabled.
+        // Webpack 1.x uses Uglify plugin as a signal to minify *all* the assets
+        // including CSS. This is confusing and will be removed in Webpack 2:
+        // https://github.com/webpack/webpack/issues/283
+        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1&-autoprefixer!postcss')
+        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
       },
       // {
       //   test: /\.scss$/,
@@ -196,6 +211,7 @@ module.exports = {
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",
