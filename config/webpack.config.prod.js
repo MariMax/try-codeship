@@ -55,6 +55,7 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [
     require.resolve('./polyfills'),
+    'font-awesome-loader!./config/font-awesome.config.js',
     'bootstrap-loader',
     paths.appIndexJs
   ],
