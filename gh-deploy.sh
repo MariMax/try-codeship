@@ -1,3 +1,5 @@
+rm -rf build
+npm run build
 cd build
 git init
 #git remote add origin git@github.com:Svyatoslavik/react-mentoring-task.git
