@@ -9,12 +9,29 @@ class CategoryItem extends Component {
       subListOpened: false
     };
     this.toggleSubBntClick = this.toggleList.bind(this);
+    this.onClickHandler = this.onClickHandler.bind(this);
+    this.wrapHandler = this.wrapHandler.bind(this);
   }
 
-  toggleList(){
+  toggleList(e){
+    e.stopPropagation();
     this.setState({
       subListOpened:!this.state.subListOpened
     });
+  }
+  onClickHandler(e){
+    e.stopPropagation();
+    if(this.props.onSelect){
+        this.props.onSelect(this.props.category);
+    }
+  }
+
+  wrapHandler(handler){
+      var cat = this.props.category;
+      return function (e) {
+          e.stopPropagation();
+          handler(cat);
+      }
   }
 
   render() {
@@ -22,22 +39,23 @@ class CategoryItem extends Component {
     var hasSub = Array.isArray(cat.subcategories) && cat.subcategories.length;
     var toggleStateIcon = this.state.subListOpened?'fa-minus-square':'fa-plus-square';
     var isSelected = this.props.isSelected;
+    var classes = [];
+    this.props.onSelect && classes.push('cursor-pointer');
+    classes.push((isSelected?'bg-primary text-white':'text-default'));
 
     return (
-        <li className={'list-group-item '+(isSelected?'bg-primary text-white':'text-default')}>
+        <li onClick={this.onClickHandler} className={'list-group-item '+classes.join(' ')}>
           {(hasSub)?(
             <button onClick={this.toggleSubBntClick} className={`btn btn-sm btn-info m-r-1 fa ${toggleStateIcon}`}>
             </button>)
           :null}
           {cat.title}
           {this.props.onAddSubCategory
-            ?(<button onClick={()=>this.props.onAddSubCategory(cat)} className="pull-xs-right fa fa-plus-circle"></button>):null}
+            ?(<button onClick={this.wrapHandler(this.props.onAddSubCategory)} className="pull-xs-right fa fa-plus-circle"></button>):null}
           {this.props.onEdit
-            ?(<button onClick={()=>this.props.onEdit(cat)} className="pull-xs-right fa fa-edit"></button>):null}
-          {this.props.onSelect
-            ?(<button onClick={()=>this.props.onSelect(cat)} className="pull-xs-right fa fa-check-circle"></button>):null}
+            ?(<button onClick={this.wrapHandler(this.props.onEdit)} className="pull-xs-right fa fa-edit"></button>):null}
           {this.props.onRemove
-            ?(<button onClick={()=>this.props.onRemove(cat)} className="pull-xs-right fa fa-trash"></button>):null}
+            ?(<button onClick={this.wrapHandler(this.props.onRemove)} className="pull-xs-right fa fa-trash"></button>):null}
           {(hasSub&&this.state.subListOpened)?(
             <CategoriesList
               className="list-group m-t-1"

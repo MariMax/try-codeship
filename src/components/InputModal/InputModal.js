@@ -70,6 +70,6 @@ InputModal.propTypes = {
   value: PropTypes.string,
   onHide: PropTypes.func,
   onSubmit: PropTypes.func.isRequired
-}
+};
 
 export default InputModal;

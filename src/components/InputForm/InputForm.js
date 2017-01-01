@@ -36,6 +36,6 @@ class InputForm extends Component {
 InputForm.propTypes = {
   onSubmit : PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired
-}
+};
 
 export default InputForm;
