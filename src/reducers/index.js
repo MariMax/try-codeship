@@ -6,6 +6,7 @@ import { ACTION_UPDATE_TASK } from 'actions/updateTaskAction';
 import { ACTION_REMOVE_CATEGORY } from 'actions/removeCategoryAction';
 
 import { combineReducers } from 'redux';
+import undoable, { excludeAction } from 'redux-undo';
 import _ from 'lodash';
 
 function tasksReducer(state = [], action) {
@@ -77,7 +78,7 @@ function categoriesReducer(state = [], action){
   return state;
 }
 
-export default combineReducers({
+export default undoable(combineReducers({
     tasks: tasksReducer,
     categories: categoriesReducer
-});
+}), { filter: excludeAction(ACTION_SET_TASKS_AND_CATEGORIES)});

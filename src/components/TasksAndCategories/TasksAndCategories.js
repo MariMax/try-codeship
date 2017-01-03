@@ -3,6 +3,7 @@ import InputForm from '../InputForm/InputForm';
 import InputModal from '../InputModal/InputModal';
 import CategoriesList from '../CategoriesList/CategoriesList';
 import TasksList from '../TasksList/TasksList';
+import UndoRedo from '../UndoRedo/UndoRedo';
 import { connect } from 'react-redux';
 
 import { addCategoryAction } from 'actions/addCategoryAction';
@@ -78,6 +79,7 @@ class TasksAndCategories extends Component {
   render() {
     return (
         <div className="container">
+          <UndoRedo className="m-b-1"/>
           <div className="clearfix m-b-1">
             <div className="pull-xs-left">
               <InputForm onSubmit={this.onAddCategory} placeholder="Enter category title"/>
@@ -115,9 +117,10 @@ class TasksAndCategories extends Component {
 }
 
 function mapStateToProps(state, props){
+  let curState = state.present;
   let selectedCategory;
-  let tasks = state.tasks;
-  let categoriesTree = new CategoriesTree(state.categories);
+  let tasks = curState.tasks;
+  let categoriesTree = new CategoriesTree(curState.categories);
   let isDone = !!props.filters.is_done;
 
   if(props.filters.query){
@@ -153,4 +156,9 @@ TasksAndCategories.propTypes = {
 };
 
 export default connect(mapStateToProps,
-  { addCategoryAction,  addTaskAction, updateCategoryAction, updateTaskAction, removeCategoryAction })(TasksAndCategories);
+  { addCategoryAction,
+    addTaskAction,
+    updateCategoryAction,
+    updateTaskAction,
+    removeCategoryAction
+  })(TasksAndCategories);

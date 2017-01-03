@@ -13,9 +13,10 @@ class ProgressBar extends Component {
   }
 }
 
-function mapStateToProps(state, props) { 
-  let countUncomplitedCats = getCategoriesIdsWithUncompletedTasks(state.tasks).length;  
-  let countCategoriesWithTasks = getCategoriesIdsWithTasks(state.tasks).length;
+function mapStateToProps(state) {
+  var curState = state.present;
+  let countUncomplitedCats = getCategoriesIdsWithUncompletedTasks(curState.tasks).length;
+  let countCategoriesWithTasks = getCategoriesIdsWithTasks(curState.tasks).length;
 
   return {
     completed: countCategoriesWithTasks - countUncomplitedCats,

@@ -103,12 +103,13 @@ class PageEditTask extends Component {
   }
 }
 function mapStateToProps(state, props){
+  let curState = state.present;
   let taskId = parseInt(props.routeParams.taskId, 10);
   return {
-    task: state.tasks.find(function(task){
+    task: curState.tasks.find(function(task){
       return taskId === task.id;
     }),
-    categories:state.categories
+    categories:curState.categories
   };
 }
 export default connect(mapStateToProps, {updateTaskAction:updateTaskAction})(PageEditTask);
