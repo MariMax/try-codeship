@@ -1,6 +1,7 @@
 // CategoryItem
 import React, { Component, PropTypes } from 'react';
 import CategoriesList from '../../CategoriesList';
+import SVGUse from 'components/SVGUse/SVGUse';
 
 class CategoryItem extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class CategoryItem extends Component {
   render() {
     var cat = this.props.category;
     var hasSub = Array.isArray(cat.subcategories) && cat.subcategories.length;
-    var toggleStateIcon = this.state.subListOpened?'fa-minus-square':'fa-plus-square';
+    var toggleStateIcon = this.state.subListOpened?'#icon-minus':'#icon-plus';
     var isSelected = this.props.isSelected;
     var classes = [];
     this.props.onSelect && classes.push('cursor-pointer');
@@ -46,16 +47,18 @@ class CategoryItem extends Component {
     return (
         <li onClick={this.onClickHandler} className={'list-group-item '+classes.join(' ')}>
           {(hasSub)?(
-            <button onClick={this.toggleSubBntClick} className={`btn btn-sm btn-info m-r-1 fa ${toggleStateIcon}`}>
+            <button onClick={this.toggleSubBntClick} className="btn btn-sm btn-info m-r-1">
+                <SVGUse href={toggleStateIcon}/>
             </button>)
           :null}
           {cat.title}
           {this.props.onAddSubCategory
-            ?(<button onClick={this.wrapHandler(this.props.onAddSubCategory)} className="pull-xs-right fa fa-plus-circle"></button>):null}
+            ?(<SVGUse onClick={this.wrapHandler(this.props.onAddSubCategory)} className="pull-xs-right icon m-l-025" href="#icon-folder-plus"/>):null}
           {this.props.onEdit
-            ?(<button onClick={this.wrapHandler(this.props.onEdit)} className="pull-xs-right fa fa-edit"></button>):null}
+            ?(<SVGUse onClick={this.wrapHandler(this.props.onEdit)} className="pull-xs-right icon m-l-025" href="#icon-pencil"/>):null}
+
           {this.props.onRemove
-            ?(<button onClick={this.wrapHandler(this.props.onRemove)} className="pull-xs-right fa fa-trash"></button>):null}
+            ?(<SVGUse onClick={this.wrapHandler(this.props.onRemove)} className="pull-xs-right icon" href="#icon-bin"></SVGUse>):null}
           {(hasSub&&this.state.subListOpened)?(
             <CategoriesList
               className="list-group m-t-1"

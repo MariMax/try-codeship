@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
+import SVGUse from 'components/SVGUse/SVGUse';
 
 function mapStateToProps(state){
     return {
@@ -15,8 +16,12 @@ export default connect(mapStateToProps, {
 })(function UndoRedo(props){
     return (
         <div className={props.className}>
-            <button className={"btn fa fa-undo" +(!props.hasUndo?' disabled':'')} onClick={props.undoAction}></button>
-            <button className={"btn fa fa fa-repeat"+(!props.hasRedo?' disabled':'')} onClick={props.redoAction}></button>
+            <button className={"btn" +(!props.hasUndo?' disabled':'')} onClick={props.undoAction}>
+                <SVGUse href="#icon-undo"/>
+            </button>
+            <button className={"btn"+(!props.hasRedo?' disabled':'')} onClick={props.redoAction}>
+                <SVGUse href="#icon-redo"/>
+            </button>
         </div>
     )
 });

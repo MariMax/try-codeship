@@ -8,6 +8,7 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
+var fs = require('fs');
 
 function ensureSlash(path, needsSlash) {
   var hasSlash = path.endsWith('/');
@@ -55,7 +56,6 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [
     require.resolve('./polyfills'),
-    'font-awesome-loader!./config/font-awesome.config.js',
     'bootstrap-loader',
     paths.appIndexJs
   ],
@@ -189,7 +189,8 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin({
-      PUBLIC_URL: publicUrl
+      PUBLIC_URL: publicUrl,
+      SVG_ICONS_DATA: fs.readFileSync('icons/symbol-defs.svg').toString()
     }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

@@ -9,7 +9,7 @@ var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeMod
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+var fs = require('fs');
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 var publicPath = '/';
@@ -33,7 +33,6 @@ module.exports = {
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
   entry: [
-    'font-awesome-loader!./config/font-awesome.config.js',
     'bootstrap-loader',
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
@@ -187,11 +186,13 @@ module.exports = {
     ];
   },
   plugins: [
+    //new MyPlugin({options: 'nada'}),
     // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
     new InterpolateHtmlPlugin({
-      PUBLIC_URL: publicUrl
+      PUBLIC_URL: publicUrl,
+      SVG_ICONS_DATA: fs.readFileSync('icons/symbol-defs.svg').toString()
     }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
