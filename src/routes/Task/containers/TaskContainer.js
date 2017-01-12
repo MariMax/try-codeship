@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-import updateTaskAction from 'actions/updateTaskAction';
+import { updateTaskAction } from 'actions/updateTaskAction';
 
 import Header from 'components/Header/Header';
 import EditTaskView from '../components/EditTaskView'

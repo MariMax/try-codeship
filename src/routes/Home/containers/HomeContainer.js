@@ -8,11 +8,11 @@ import TasksAndCategoriesView from '../components/TasksAndCategoriesView'
 
 import CategoriesTree, { CategoryStatus } from 'utils/categories-tree';
 
-import addTaskAction from 'actions/addTaskAction';
-import updateTaskAction from 'actions/updateTaskAction';
-import addCategoryAction from 'actions/addCategoryAction';
-import updateCategoryAction from 'actions/updateCategoryAction';
-import removeCategoryAction from 'actions/removeCategoryAction';
+import { addTaskAction } from 'actions/addTaskAction';
+import { updateTaskAction } from 'actions/updateTaskAction';
+import { addCategoryAction } from 'actions/addCategoryAction';
+import { updateCategoryAction } from 'actions/updateCategoryAction';
+import { removeCategoryAction } from 'actions/removeCategoryAction';
 
 class HomeContainer extends Component {
     onTaskDoneChanged(task, isDone){

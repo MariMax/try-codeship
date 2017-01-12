@@ -9,7 +9,7 @@ import AppContainer from 'containers/AppContainer/AppContainer';
 import reducers from 'reducers';
 
 import { loadCategoriesList, loadTasksList } from 'data-providers/tasks/tasks';
-import setTasksAndCategoriesAction from 'actions/setTasksAndCategoriesAction';
+import { setTasksAndCategoriesAction } from 'actions/setTasksAndCategoriesAction';
 import createRoutes from 'routes';
 
 const MOUNT_NODE = document.getElementById('root');
