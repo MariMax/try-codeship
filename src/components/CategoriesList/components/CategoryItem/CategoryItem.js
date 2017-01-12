@@ -1,7 +1,7 @@
 // CategoryItem
 import React, { Component, PropTypes } from 'react';
 import CategoriesList from '../../CategoriesList';
-import SVGUse from 'components/SVGUse/SVGUse';
+import SVGUse from '../../../SVGUse/SVGUse';
 
 class CategoryItem extends Component {
   constructor(props) {
