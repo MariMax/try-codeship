@@ -132,7 +132,7 @@ export default function CategoriesTree(plainCategoriesList, plainTasksList) {
 
   this.selectBranch = function(category) {
     this.getList().forEach(cat => cat.selected = false);
-    getCategory(category).selectWithParents();
+    if(category) getCategory(category).selectWithParents();
   }.bind(this);
 
   this.addTasks = addTasks;
