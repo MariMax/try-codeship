@@ -1,0 +1,59 @@
+exports[`TasksList component should render tasks list 1`] = `
+<ul
+  className="list-group pre-scrollable tasks-list">
+  <li
+    className="list-group-item d-flex flex-items-xs-middle flex-items-xs-between">
+    <div>
+      task 1
+    </div>
+    <div>
+      <input
+        checked={false}
+        onChange={[Function]}
+        type="checkbox" />
+      <a
+        className="btn btn-secondary m-l-1"
+        onClick={[Function]}
+        style={Object {}}>
+        edit
+      </a>
+    </div>
+  </li>
+  <li
+    className="list-group-item d-flex flex-items-xs-middle flex-items-xs-between">
+    <div>
+      task 2
+    </div>
+    <div>
+      <input
+        checked={true}
+        onChange={[Function]}
+        type="checkbox" />
+      <a
+        className="btn btn-secondary m-l-1"
+        onClick={[Function]}
+        style={Object {}}>
+        edit
+      </a>
+    </div>
+  </li>
+  <li
+    className="list-group-item d-flex flex-items-xs-middle flex-items-xs-between">
+    <div>
+      task 3
+    </div>
+    <div>
+      <input
+        checked={true}
+        onChange={[Function]}
+        type="checkbox" />
+      <a
+        className="btn btn-secondary m-l-1"
+        onClick={[Function]}
+        style={Object {}}>
+        edit
+      </a>
+    </div>
+  </li>
+</ul>
+`;

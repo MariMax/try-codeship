@@ -55,8 +55,8 @@ function categoriesReducer(state = [], action){
 
   if(ACTION_ADD_CATEGORY === action.type) {
     var newCategory = {
+      id: (state.length + 1).toString(),
       title: action.title,
-      id: state.length + 1,
       parent: action.parent && action.parent.id
     };
     return [newCategory, ...state];

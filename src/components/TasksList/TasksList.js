@@ -13,6 +13,6 @@ function TasksList(props){
 TasksList.propTypes = {
   list : PropTypes.array.isRequired,
   onDoneChange: PropTypes.func.isRequired
-}
+};
 
 export default TasksList;
