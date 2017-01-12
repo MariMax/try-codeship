@@ -47,7 +47,7 @@ var categoriesListMock = [
 
 
 describe('CategoriesList component', function(){
-    jest.mock('components/SVGUse/SVGUse', function(){
+    jest.mock('../../SVGUse/SVGUse', function(){
         return (<button/>);
     });
 
